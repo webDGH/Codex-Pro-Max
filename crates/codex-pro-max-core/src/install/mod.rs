@@ -5,8 +5,8 @@ use serde::{Deserialize, Serialize};
 pub mod macos;
 pub mod windows;
 
-pub const SILENT_NAME: &str = "codex-pro-max";
-pub const MANAGER_NAME: &str = "codex-pro-max 管理工具";
+pub const SILENT_NAME: &str = "Codex Pro Max";
+pub const MANAGER_NAME: &str = "Codex Pro Max 管理工具";
 pub const SILENT_BINARY: &str = "codex-pro-max";
 pub const MANAGER_BINARY: &str = "codex-pro-max-manager";
 
@@ -70,11 +70,11 @@ impl ShortcutState {
 }
 
 pub fn shortcut_names() -> (&'static str, &'static str) {
-    ("codex-pro-max.lnk", "codex-pro-max 管理工具.lnk")
+    ("Codex Pro Max.lnk", "Codex Pro Max 管理工具.lnk")
 }
 
 pub fn app_bundle_names() -> (&'static str, &'static str) {
-    ("codex-pro-max.app", "codex-pro-max 管理工具.app")
+    ("Codex Pro Max.app", "Codex Pro Max 管理工具.app")
 }
 
 pub fn inspect_entrypoints() -> EntryPointState {
@@ -162,7 +162,7 @@ fn platform_install(options: &InstallOptions) -> anyhow::Result<()> {
     #[cfg(not(any(windows, target_os = "macos")))]
     {
         let _ = options;
-        anyhow::bail!("当前平台暂不支持安装 codex-pro-max 入口")
+        anyhow::bail!("当前平台暂不支持安装 Codex Pro Max 入口")
     }
 }
 
@@ -180,7 +180,7 @@ fn platform_uninstall(options: &InstallOptions) -> anyhow::Result<()> {
     #[cfg(not(any(windows, target_os = "macos")))]
     {
         let _ = options;
-        anyhow::bail!("当前平台暂不支持卸载 codex-pro-max 入口")
+        anyhow::bail!("当前平台暂不支持卸载 Codex Pro Max 入口")
     }
 }
 

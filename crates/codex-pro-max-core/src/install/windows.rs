@@ -31,11 +31,11 @@ pub fn build_windows_entrypoint_plan(options: &InstallOptions) -> WindowsEntrypo
     let icon_path = default_icon_path();
     WindowsEntrypointPlan {
         silent_shortcut: install_root
-            .join("codex-pro-max.lnk")
+            .join(crate::install::shortcut_names().0)
             .to_string_lossy()
             .to_string(),
         manager_shortcut: install_root
-            .join("codex-pro-max 管理工具.lnk")
+            .join(crate::install::shortcut_names().1)
             .to_string_lossy()
             .to_string(),
         install_root: install_root.to_string_lossy().to_string(),
@@ -58,13 +58,13 @@ pub fn install_shortcuts(options: &InstallOptions) -> anyhow::Result<()> {
     create_entrypoint_shortcut(
         PathBuf::from(&plan.silent_shortcut),
         PathBuf::from(&plan.launcher_path),
-        "Launch codex-pro-max silently",
+        "Launch Codex Pro Max silently",
         PathBuf::from(&plan.silent_icon_path),
     )?;
     create_entrypoint_shortcut(
         PathBuf::from(&plan.manager_shortcut),
         PathBuf::from(&plan.manager_path),
-        "Open codex-pro-max management tool",
+        "Open Codex Pro Max management tool",
         PathBuf::from(&plan.manager_icon_path),
     )?;
     write_uninstall_registration(&plan)?;
@@ -120,9 +120,9 @@ fn write_uninstall_registration(plan: &WindowsEntrypointPlan) -> anyhow::Result<
         .to_string_lossy()
         .to_string();
     for (name, value) in [
-        ("DisplayName", "codex-pro-max".to_string()),
+        ("DisplayName", "Codex Pro Max".to_string()),
         ("DisplayVersion", crate::version::VERSION.to_string()),
-        ("Publisher", "shgkz".to_string()),
+        ("Publisher", "devzxl".to_string()),
         ("DisplayIcon", plan.manager_icon_path.clone()),
         ("InstallLocation", install_location),
         ("UninstallString", uninstall_command.clone()),

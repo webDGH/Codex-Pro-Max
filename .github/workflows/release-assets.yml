@@ -28,10 +28,15 @@ jobs:
           set -euo pipefail
           if gh release view "$TAG" --repo "$REPO" >/dev/null 2>&1; then
             echo "Release $TAG already exists"
+            gh release edit "$TAG" \
+            --title "Codex Pro Max ${TAG#v}" \
+            --notes "Codex Pro Max ${TAG#v} release." \
+            --latest \
+            --repo "$REPO"
           else
             gh release create "$TAG" \
-            --title "codex-pro-max ${TAG#v}" \
-            --notes "codex-pro-max ${TAG#v} release." \
+            --title "Codex Pro Max ${TAG#v}" \
+            --notes "Codex Pro Max ${TAG#v} release." \
             --latest \
             --repo "$REPO"
           fi
@@ -94,6 +99,7 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ env.RELEASE_TAG }}
+          overwrite_files: true
           files: dist/windows/*.exe
 
   macos-dmg:
@@ -150,6 +156,7 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ env.RELEASE_TAG }}
+          overwrite_files: true
           files: dist/macos/*.dmg
 
   latest-json:

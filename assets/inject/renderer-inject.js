@@ -813,12 +813,38 @@
   const codexProMaxMenuTranslations = new Map(Object.entries({
     "File": "文件",
     "Edit": "编辑",
-    "View": "视图",
+    "View": "查看",
     "Window": "窗口",
     "Help": "帮助",
+    "Undo": "撤销",
+    "Redo": "重做",
+    "Cut": "剪切",
+    "Copy": "复制",
+    "Paste": "粘贴",
+    "Paste and Match Style": "粘贴并匹配样式",
+    "Select All": "全选",
+    "Find": "查找",
+    "Reload": "重新加载",
+    "Force Reload": "强制重新加载",
+    "Toggle Developer Tools": "切换开发者工具",
+    "Actual Size": "实际大小",
+    "Zoom In": "放大",
+    "Zoom Out": "缩小",
+    "Toggle Full Screen": "切换全屏",
+    "Minimize": "最小化",
+    "Zoom": "缩放",
+    "Bring All to Front": "全部置于前台",
+    "Close": "关闭",
+    "New Window": "新建窗口",
     "Settings": "设置",
+    "Settings...": "设置...",
+    "Settings…": "设置...",
     "New chat": "新建会话",
     "New Chat": "新建会话",
+    "Quick Chat": "快速会话",
+    "Open Folder": "打开文件夹",
+    "Open Folder...": "打开文件夹...",
+    "Open Folder…": "打开文件夹...",
     "History": "历史会话",
     "Archive": "归档",
     "Archived": "已归档",
@@ -826,8 +852,11 @@
     "Export": "导出",
     "Open": "打开",
     "Open in editor": "在编辑器中打开",
+    "About Codex": "关于 Codex",
     "Sign in": "登录",
     "Sign out": "退出登录",
+    "Log Out": "退出登录",
+    "Exit": "退出",
     "Model": "模型",
     "Plugins": "插件",
     "Install": "安装",
@@ -852,24 +881,39 @@
     "Open with Zed": "用 Zed 打开",
   }));
 
+  const codexProMaxBrandName = "Codex Pro Max";
+
+  function codexProMaxVersionLabel() {
+    return `${codexProMaxBrandName} ${codexPlusVersion}`;
+  }
+
+  function translateCodexMenuValue(value) {
+    if (!value) return value;
+    const trimmed = value.trim();
+    const direct = codexProMaxMenuTranslations.get(trimmed);
+    if (direct) return value.replace(trimmed, direct);
+    const orderedTranslations = Array.from(codexProMaxMenuTranslations).sort((a, b) => b[0].length - a[0].length);
+    for (const [source, target] of orderedTranslations) {
+      if (trimmed === source || trimmed.startsWith(`${source} `) || trimmed.startsWith(`${source}\t`)) {
+        return value.replace(source, target);
+      }
+    }
+    return value;
+  }
+
   function localizeCodexMenuText(root = document.body) {
     if (!root) return;
     const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
     const nodes = [];
     while (walker.nextNode()) nodes.push(walker.currentNode);
     nodes.forEach((node) => {
-      const value = node.nodeValue || "";
-      const trimmed = value.trim();
-      if (codexProMaxMenuTranslations.has(trimmed)) {
-        node.nodeValue = value.replace(trimmed, codexProMaxMenuTranslations.get(trimmed));
-      }
+      node.nodeValue = translateCodexMenuValue(node.nodeValue || "");
     });
     document.querySelectorAll("[aria-label],[title],input[placeholder],textarea[placeholder]").forEach((element) => {
       ["aria-label", "title", "placeholder"].forEach((attribute) => {
         const value = element.getAttribute(attribute);
-        if (codexProMaxMenuTranslations.has(value)) {
-          element.setAttribute(attribute, codexProMaxMenuTranslations.get(value));
-        }
+        const translated = translateCodexMenuValue(value);
+        if (translated !== value) element.setAttribute(attribute, translated);
       });
     });
   }
@@ -1510,10 +1554,10 @@
     if (codexPlusBackendStatus.version) {
       codexPlusVersion = codexPlusBackendStatus.version;
       document.querySelectorAll("[data-codex-plus-version]").forEach((node) => {
-        node.textContent = `codex-pro-max ${codexPlusVersion}`;
+        node.textContent = codexProMaxVersionLabel();
       });
       document.querySelectorAll(`#${codexPlusMenuId} .codex-plus-trigger`).forEach((node) => {
-        node.textContent = `codex-pro-max ${codexPlusVersion}`;
+        node.textContent = codexProMaxVersionLabel();
       });
     }
     const label = document.querySelector("[data-codex-backend-status]");
@@ -1632,12 +1676,12 @@
     const overlay = document.createElement("div");
     overlay.className = "codex-plus-modal-overlay";
     overlay.innerHTML = `
-      <div class="codex-plus-modal-content" role="dialog" aria-modal="true" aria-label="codex-pro-max">
+      <div class="codex-plus-modal-content" role="dialog" aria-modal="true" aria-label="Codex Pro Max">
         <div class="codex-plus-modal-header">
-          <div class="codex-plus-modal-title"><span class="codex-plus-backend-indicator" data-codex-backend-indicator="true" data-status="checking"></span><span data-codex-plus-version="true">codex-pro-max ${codexPlusVersion}</span></div>
+          <div class="codex-plus-modal-title"><span class="codex-plus-backend-indicator" data-codex-backend-indicator="true" data-status="checking"></span><span data-codex-plus-version="true">${codexProMaxVersionLabel()}</span></div>
           <button type="button" class="codex-plus-modal-close" aria-label="关闭">×</button>
         </div>
-        <div class="codex-plus-tabs" role="tablist" aria-label="codex-pro-max">
+        <div class="codex-plus-tabs" role="tablist" aria-label="Codex Pro Max">
           <button type="button" class="codex-plus-tab-button" data-codex-plus-tab="home" data-active="true">主页</button>
           <button type="button" class="codex-plus-tab-button" data-codex-plus-tab="userScripts" data-active="false">用户脚本</button>
         </div>
@@ -1735,7 +1779,7 @@
               <button type="button" class="codex-plus-action-button" data-codex-open-manager="true">打开管理工具</button>
             </div>
             <div class="codex-plus-row">
-              <div><div class="codex-plus-row-title">原生菜单栏位置</div><div class="codex-plus-row-description">把 codex-pro-max 菜单插入顶部原生菜单栏；默认关闭以避免页面重渲染冲突。</div></div>
+              <div><div class="codex-plus-row-title">原生菜单栏位置</div><div class="codex-plus-row-description">把 Codex Pro Max 菜单插入顶部原生菜单栏；默认关闭以避免页面重渲染冲突。</div></div>
               <button type="button" class="codex-plus-toggle" data-codex-plus-setting="nativeMenuPlacement"><span></span></button>
             </div>
             <div class="codex-plus-row">
@@ -1743,7 +1787,7 @@
               <button type="button" class="codex-plus-action-button" data-codex-open-devtools="true">打开 DevTools</button>
             </div>
             <div class="codex-plus-row">
-              <div><div class="codex-plus-row-title">关于 codex-pro-max</div><div class="codex-plus-about">codex-pro-max 是通过外部 launcher 注入的增强菜单，不修改 Codex App 原始安装文件。<br>Build: <span data-codex-plus-build="true">${codexPlusBuild}</span><br>GitHub: <a href="https://github.com/devzxl/Codex-Pro-Max" target="_blank" rel="noreferrer">https://github.com/devzxl/Codex-Pro-Max</a></div></div>
+              <div><div class="codex-plus-row-title">关于 Codex Pro Max</div><div class="codex-plus-about">Codex Pro Max 是通过外部 launcher 注入的增强菜单，不修改 Codex App 原始安装文件。<br>Build: <span data-codex-plus-build="true">${codexPlusBuild}</span><br>GitHub: <a href="https://github.com/devzxl/Codex-Pro-Max" target="_blank" rel="noreferrer">https://github.com/devzxl/Codex-Pro-Max</a></div></div>
             </div>
           </div>
           <div class="codex-plus-panel" data-codex-plus-panel="userScripts" hidden>
@@ -1751,7 +1795,7 @@
               <div>
                 <div class="codex-plus-row-title">用户脚本</div>
                 <div class="codex-plus-row-description">启用用户脚本：自动加载内置目录和用户配置目录中的 .js 文件。</div>
-                <div class="codex-plus-user-script-warning">禁用后需重载页面或重启 codex-pro-max 才能完全移除已执行效果。</div>
+                <div class="codex-plus-user-script-warning">禁用后需重载页面或重启 Codex Pro Max 才能完全移除已执行效果。</div>
                 <div class="codex-plus-user-script-dirs" data-codex-user-script-dirs="true">正在读取脚本目录…</div>
                 <div class="codex-plus-user-script-list" data-codex-user-script-list="true">正在读取用户脚本…</div>
               </div>
@@ -1894,7 +1938,7 @@
       if (node !== keep) node.remove();
     });
     Array.from(document.querySelectorAll("button")).forEach((button) => {
-      if ((button.textContent || "").trim() === `codex-pro-max ${codexPlusVersion}` && !button.closest(`#${codexPlusMenuId}`)) {
+      if ((button.textContent || "").trim() === codexProMaxVersionLabel() && !button.closest(`#${codexPlusMenuId}`)) {
         button.remove();
       }
     });
@@ -1987,7 +2031,7 @@
     menu.dataset.codexPlusMenuVersion = "6";
     const trigger = document.createElement("button");
     trigger.type = "button";
-    trigger.textContent = `codex-pro-max ${codexPlusVersion}`;
+    trigger.textContent = codexProMaxVersionLabel();
     const indicator = document.createElement("span");
     indicator.className = "codex-plus-backend-indicator";
     indicator.dataset.codexBackendIndicator = "true";
@@ -5044,7 +5088,7 @@
     if (!trigger) return false;
     const payload = upstreamWorktreePayloadFromSelection(trigger) || upstreamWorktreeNativePayloadFromElement(trigger);
     if (!payload) {
-      showToast("无法安全识别 Codex 原生 worktree 表单，请使用 codex-pro-max 菜单创建。", null);
+      showToast("无法安全识别 Codex 原生 worktree 表单，请使用 Codex Pro Max 菜单创建。", null);
       return false;
     }
     event.preventDefault();
@@ -7174,6 +7218,14 @@
 
   function scheduleScan(mutations) {
     scheduleZedRemoteMenuRefresh(mutations);
+    if (mutations) {
+      mutations.forEach((mutation) => {
+        if (mutation.target?.nodeType === 1) localizeCodexMenuText(mutation.target);
+        mutation.addedNodes?.forEach((node) => {
+          if (node.nodeType === 1) localizeCodexMenuText(node);
+        });
+      });
+    }
     if (!shouldScheduleScan(mutations)) return;
     if (window.__codexSessionDeleteScanPending) return;
     window.__codexSessionDeleteScanPending = true;

@@ -164,7 +164,7 @@ type RelayProtocol = "responses" | "chatCompletions";
 type RelayMode = "official" | "mixedApi" | "pureApi";
 const PROTOCOL_PROXY_BASE_URL = "http://127.0.0.1:57321/v1";
 const CHAT_UPSTREAM_BASE_URL_KEY = "codex_pro_max_chat_base_url";
-const SCRIPT_MARKET_REPOSITORY_URL = "https://github.com/shgkz/codex-pro-maxScriptMarket";
+const SCRIPT_MARKET_REPOSITORY_URL = "https://github.com/devzxl/codex-pro-maxScriptMarket";
 
 const emptyContextSelection = (): RelayContextSelection => ({
   mcpServers: [],
@@ -597,7 +597,7 @@ export function App() {
   const restart = async () => {
     const result = await launchCommand("restart_codex_pro_max");
     if (result) {
-      showNotice("重启 codex-pro-max", result.message, result.status);
+      showNotice("重启 Codex Pro Max", result.message, result.status);
       await refreshOverview(true);
     }
   };
@@ -734,7 +734,8 @@ export function App() {
       setSettingsForm(normalizeSettings(result.settings));
       showNotice("设置重置", result.message, result.status);
     }
-  };
+  };
+
 
   const syncProvidersNow = async () => {
     const result = await run(() => call<CommandResult<Record<string, never>>>("sync_providers_now"));
@@ -1220,7 +1221,7 @@ export function App() {
           <div className="brand-mark">C++</div>
           <div className="brand-copy">
             <div className="brand-title-row">
-              <div className="brand-title">codex-pro-max</div>
+              <div className="brand-title">Codex Pro Max</div>
               {hasUpdate ? (
                 <button
                   className="update-dot"
@@ -1273,9 +1274,9 @@ export function App() {
             >
               {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
             </Button>
-            <Button onClick={() => void actions.restart()} title="重启 codex-pro-max" variant="outline">
+            <Button onClick={() => void actions.restart()} title="重启 Codex Pro Max" variant="outline">
               <Rocket className="h-4 w-4" />
-              重启 codex-pro-max
+              重启 Codex Pro Max
             </Button>
             <Button onClick={() => void actions.refreshCurrent()} size="icon" title="刷新当前页面" variant="outline">
               <RefreshCw className="h-4 w-4" />
@@ -1366,7 +1367,8 @@ type Actions = {
   refreshRelayFiles: () => Promise<RelayFilesResult | null>;
   refreshLiveContextEntries: () => Promise<LiveContextEntriesResult | null>;
   syncLiveContextEntries: (settings: BackendSettings, silent?: boolean) => Promise<LiveContextEntriesResult | null>;
-  importCcsProviders: () => Promise<void>;
+  importCcsProviders: () => Promise<void>;
+
   refreshScriptMarket: () => Promise<void>;
   installMarketScript: (id: string) => Promise<void>;
   setUserScriptEnabled: (key: string, enabled: boolean) => Promise<void>;
@@ -1458,7 +1460,7 @@ function OverviewScreen({
           <Toolbar>
             <Button onClick={() => void actions.launch()}>
               <Rocket className="h-4 w-4" />
-              启动 codex-pro-max
+              启动 Codex Pro Max
             </Button>
             <Button variant="secondary" onClick={() => void actions.goLogs()}>
               打开关于
@@ -1621,7 +1623,7 @@ function EnhanceScreen({
               type="checkbox"
             />
             <span>
-              <strong>启用 codex-pro-max 页面增强</strong>
+              <strong>启用 Codex Pro Max 页面增强</strong>
               <small>关闭后会停用删除、导出、项目移动、Timeline、插件相关和菜单位置增强。</small>
             </span>
           </label>
@@ -1731,7 +1733,7 @@ function ProviderSyncScreen({
             />
             <span>
               <strong>启动前自动修复历史会话</strong>
-              <small>开启后，通过 codex-pro-max 启动 Codex 前自动整理一次旧对话的归属标记。</small>
+              <small>开启后，通过 Codex Pro Max 启动 Codex 前自动整理一次旧对话的归属标记。</small>
             </span>
           </label>
           <div className="relay-grid compact">
@@ -1753,7 +1755,7 @@ function ProviderSyncScreen({
         <CardContent>
           <GuideList
             items={[
-              "自动修复只在 codex-pro-max 启动 Codex 前运行，不会常驻监控或反复改写。",
+              "自动修复只在 Codex Pro Max 启动 Codex 前运行，不会常驻监控或反复改写。",
               "需要马上整理旧对话时，可以点击“立刻修复历史会话”。",
               "它不控制页面功能，也不影响 API URL 或 Key。",
               "切回官方时历史会话会整理为 openai；切到 API 时会整理为 custom。",
@@ -1808,7 +1810,7 @@ function MaintenanceScreen({
         <CardContent>
           <label className="check-row">
             <input checked={removeOwnedData} onChange={(event) => onRemoveOwnedDataChange(event.currentTarget.checked)} type="checkbox" />
-            <span>卸载时移除 codex-pro-max 托管数据</span>
+            <span>卸载时移除 Codex Pro Max 托管数据</span>
           </label>
           <Toolbar>
             <Button onClick={() => void actions.installEntrypoints()}>安装入口</Button>
@@ -1818,7 +1820,7 @@ function MaintenanceScreen({
         </CardContent>
       </Panel>
       <Panel>
-        <CardHead title="自动接管" detail="Watcher 用于保持 codex-pro-max 接管状态" />
+        <CardHead title="自动接管" detail="Watcher 用于保持 Codex Pro Max 接管状态" />
         <CardContent>
           <Toolbar>
             <Button variant="secondary" onClick={() => void actions.installWatcher()}>安装 watcher</Button>
@@ -1874,7 +1876,7 @@ function MaintenanceScreen({
             </Field>
           </div>
           <Toolbar>
-            <Button onClick={() => void actions.launch()}>启动 codex-pro-max</Button>
+            <Button onClick={() => void actions.launch()}>启动 Codex Pro Max</Button>
             <Button variant="secondary" onClick={() => void actions.saveManualCodexAppPath()}>
               保存为默认路径
             </Button>
@@ -1901,10 +1903,10 @@ function AboutScreen({
   return (
     <>
       <Panel>
-        <CardHead title="关于 codex-pro-max" detail="本地 Codex 增强、管理工具和安装包维护" />
+        <CardHead title="关于 Codex Pro Max" detail="本地 Codex 增强、管理工具和安装包维护" />
         <CardContent>
           <div className="metric-list">
-            <Metric label="codex-pro-max 版本" value={overview?.current_version ?? update?.currentVersion ?? "-"} />
+            <Metric label="Codex Pro Max 版本" value={overview?.current_version ?? update?.currentVersion ?? "-"} />
             <Metric label="Codex 版本" value={overview?.codex_version ?? "未检测到"} />
             <Metric label="项目地址" value="github.com/devzxl/Codex-Pro-Max" />
           </div>
@@ -2597,7 +2599,7 @@ function RelayProfileEditor({
       {showApiFields && profile.protocol === "chatCompletions" ? (
         <div className="hint-line relay-protocol-hint">
           <MessageCircle className="h-4 w-4" />
-          <span>此上游会通过本地 127.0.0.1:57321 转成 Responses API，需要从 codex-pro-max 启动 Codex。</span>
+          <span>此上游会通过本地 127.0.0.1:57321 转成 Responses API，需要从 Codex Pro Max 启动 Codex。</span>
         </div>
       ) : null}
       <div className="hint-line relay-protocol-hint">
@@ -3724,7 +3726,7 @@ function healthItems(overview: OverviewResult | null) {
       title: "静默启动入口",
       status: overview?.silent_shortcut.status ?? "not_checked",
       ok: overview?.silent_shortcut.status === "installed",
-      detail: overview?.silent_shortcut.path || "缺少 codex-pro-max 静默启动快捷方式时可在安装维护页修复。",
+      detail: overview?.silent_shortcut.path || "缺少 Codex Pro Max 静默启动快捷方式时可在安装维护页修复。",
     },
     {
       title: "管理工具入口",

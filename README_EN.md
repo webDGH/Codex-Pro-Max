@@ -1,7 +1,7 @@
-# codex-pro-max
+# Codex Pro Max
 
 <p align="center">
-  <img src="codex-pro-max.png" alt="codex-pro-max icon" width="160">
+  <img src="codex-pro-max.png" alt="Codex Pro Max icon" width="160">
 </p>
 
 <p align="center">
@@ -16,7 +16,7 @@
   <img alt="Tauri" src="https://img.shields.io/badge/tauri-2.x-24C8DB">
 </p>
 
-codex-pro-max is an external enhancement launcher and manager for the Codex App. It does not modify the original Codex installation. Instead, it starts Codex externally and injects enhancements through the Chromium DevTools Protocol.
+Codex Pro Max is an external enhancement launcher and manager for the Codex App. It does not modify the original Codex installation. Instead, it starts Codex externally and injects enhancements through the Chromium DevTools Protocol.
 
 ## Quick Start
 
@@ -28,10 +28,10 @@ Download the latest installer from [GitHub Releases](https://github.com/devzxl/C
 
 After installation, two entry points are available:
 
-- `codex-pro-max`: a silent launcher. It does not show the manager UI and only starts Codex with codex-pro-max injection.
-- `codex-pro-max Manager`: a Tauri control panel for launch, diagnostics, repair, updates, relay injection, enhancements, and user scripts.
+- `Codex Pro Max`: a silent launcher. It does not show the manager UI and only starts Codex with Codex Pro Max injection.
+- `Codex Pro Max Manager`: a Tauri control panel for launch, diagnostics, repair, updates, relay injection, enhancements, and user scripts.
 
-The Windows installer creates desktop and Start Menu shortcuts. The macOS DMG installs `/Applications/codex-pro-max.app` and `/Applications/codex-pro-max 管理工具.app`.
+The Windows installer creates desktop and Start Menu shortcuts. The macOS DMG installs `/Applications/Codex Pro Max.app` and `/Applications/Codex Pro Max 管理工具.app`.
 
 ## Highlights
 
@@ -57,9 +57,9 @@ In the manager's Relay Injection page:
 1. Make sure ChatGPT login status is detected.
 2. Add one or more relay profiles with Base URL and Key.
 3. Select the active profile and apply relay injection.
-4. Launch `codex-pro-max`.
+4. Launch `Codex Pro Max`.
 
-codex-pro-max writes configuration similar to this into `~/.codex/config.toml`:
+Codex Pro Max writes configuration similar to this into `~/.codex/config.toml`:
 
 ```toml
 model_provider = "CodexProMax"
@@ -76,13 +76,13 @@ To return to the official login mode, use the clear API mode button in the Relay
 
 ## Enhancements
 
-Enhancements are controlled in the manager. Enhancement injection is enabled by default. When disabled, codex-pro-max will not inject its menu or scripts.
+Enhancements are controlled in the manager. Enhancement injection is enabled by default. When disabled, Codex Pro Max will not inject its menu or scripts.
 
 When relay injection mode is active, plugin entry unlock and forced plugin install are unnecessary, and the UI will say so. Other enhancements, including session delete, export, move, Timeline, and user scripts, can still be used.
 
 ## Updates and Packages
 
-codex-pro-max publishes installers through GitHub Releases. Windows builds an NSIS installer, while macOS builds separate Intel x64 and Apple Silicon arm64 DMGs.
+Codex Pro Max publishes installers through GitHub Releases. Windows builds an NSIS installer, while macOS builds separate Intel x64 and Apple Silicon arm64 DMGs.
 
 The manager's About page can check and start updates. When the silent launcher finds a new version, it opens the manager directly on the update prompt.
 
@@ -96,9 +96,9 @@ The manager's About page can check and start updates. When the silent launcher f
 
 ## FAQ
 
-### The codex-pro-max menu does not appear
+### The Codex Pro Max menu does not appear
 
-Make sure Codex was launched from the `codex-pro-max` entry instead of the original Codex entry. You can also inspect the Diagnostics and Logs pages in the manager.
+Make sure Codex was launched from the `Codex Pro Max` entry instead of the original Codex entry. You can also inspect the Diagnostics and Logs pages in the manager.
 
 ### The plugin says the backend is disconnected
 
@@ -108,17 +108,17 @@ First test the helper endpoint:
 Invoke-RestMethod -Method Post -Uri http://127.0.0.1:57321/backend/status -Body "{}" -ContentType "application/json"
 ```
 
-If the endpoint works but the plugin still times out, it is usually a Codex page CDP bridge or script cache issue. Restart codex-pro-max, or check manager logs for `renderer.script_loaded`, `bridge.request`, and `bridge.response`.
+If the endpoint works but the plugin still times out, it is usually a Codex page CDP bridge or script cache issue. Restart Codex Pro Max, or check manager logs for `renderer.script_loaded`, `bridge.request`, and `bridge.response`.
 
 ### How is Upstream worktree different from Codex native creation?
 
-codex-pro-max updates the remote branch first, then creates the worktree as if you ran:
+Codex Pro Max updates the remote branch first, then creates the worktree as if you ran:
 
 ```bash
 git worktree add -b <new-branch> <worktree-path> upstream/<base-branch>
 ```
 
-The new worktree starts from the fresh remote tracking branch instead of the local HEAD used by the current session. If codex-pro-max cannot safely recognize the current Codex version's native worktree form, use the codex-pro-max menu entry and enter the repository path, branch name, worktree path, remote, and base branch manually.
+The new worktree starts from the fresh remote tracking branch instead of the local HEAD used by the current session. If Codex Pro Max cannot safely recognize the current Codex version's native worktree form, use the Codex Pro Max menu entry and enter the repository path, branch name, worktree path, remote, and base branch manually.
 
 ### macOS says the app cannot be opened or is damaged
 
@@ -162,4 +162,4 @@ scripts/installer/
 
 ## Notes
 
-codex-pro-max is an external enhancement tool and does not modify original Codex App files. If a future Codex App update changes page structure, the injection script may need updates.
+Codex Pro Max is an external enhancement tool and does not modify original Codex App files. If a future Codex App update changes page structure, the injection script may need updates.

@@ -101,10 +101,10 @@ fn macos_packager_hides_silent_launcher_but_not_manager() {
     assert!(script.contains("BINARY_DIR=\"${BINARY_DIR:-$ROOT/target/release}\""));
     assert!(script.contains("CodexProMax-${VERSION}-macos-${ARCH}.dmg"));
     assert!(script.contains(
-        "create_app \"codex-pro-max\" \"CodexProMax\" \"$BINARY_DIR/codex-pro-max\" \"com.shgkz.codexpromax\" \"true\""
+        "create_app \"Codex Pro Max\" \"CodexProMax\" \"$BINARY_DIR/codex-pro-max\" \"com.shgkz.codexpromax\" \"true\""
     ));
     assert!(script.contains(
-        "create_app \"codex-pro-max 管理工具\" \"CodexProMaxManager\" \"$BINARY_DIR/codex-pro-max-manager\" \"com.shgkz.codexpromax.manager\" \"false\""
+        "create_app \"Codex Pro Max 管理工具\" \"CodexProMaxManager\" \"$BINARY_DIR/codex-pro-max-manager\" \"com.shgkz.codexpromax.manager\" \"false\""
     ));
 }
 

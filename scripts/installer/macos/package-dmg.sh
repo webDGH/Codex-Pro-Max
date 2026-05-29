@@ -82,12 +82,12 @@ sign_app() {
 }
 
 prepare_icon
-create_app "codex-pro-max" "CodexProMax" "$BINARY_DIR/codex-pro-max" "com.shgkz.codexpromax" "true"
-create_app "codex-pro-max 管理工具" "CodexProMaxManager" "$BINARY_DIR/codex-pro-max-manager" "com.shgkz.codexpromax.manager" "false"
+create_app "Codex Pro Max" "CodexProMax" "$BINARY_DIR/codex-pro-max" "com.shgkz.codexpromax" "true"
+create_app "Codex Pro Max 管理工具" "CodexProMaxManager" "$BINARY_DIR/codex-pro-max-manager" "com.shgkz.codexpromax.manager" "false"
 ln -s /Applications "$STAGE/Applications"
 
-sign_app "$STAGE/codex-pro-max.app"
-sign_app "$STAGE/codex-pro-max 管理工具.app"
+sign_app "$STAGE/Codex Pro Max.app"
+sign_app "$STAGE/Codex Pro Max 管理工具.app"
 
-hdiutil create -volname "codex-pro-max" -srcfolder "$STAGE" -ov -format UDZO "$DMG"
+hdiutil create -volname "Codex Pro Max" -srcfolder "$STAGE" -ov -format UDZO "$DMG"
 echo "$DMG"
