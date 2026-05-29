@@ -39,7 +39,6 @@ pub fn run() {
             commands::load_ccs_providers,
             commands::import_ccs_providers,
             commands::sync_providers_now,
-            commands::load_ads,
             commands::refresh_script_market,
             commands::install_market_script,
             commands::set_user_script_enabled,

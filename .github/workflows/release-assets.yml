@@ -25,10 +25,14 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          gh release create "$TAG" \
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            echo "Release $TAG already exists"
+          else
+            gh release create "$TAG" \
             --title "codex-pro-max ${TAG#v}" \
             --notes "codex-pro-max ${TAG#v} release." \
             --latest
+          fi
           echo "tag_name=$TAG" >> "$GITHUB_OUTPUT"
 
   windows-installer:

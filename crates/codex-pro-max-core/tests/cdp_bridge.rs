@@ -35,16 +35,16 @@ fn bridge_script_defines_expected_globals_and_binding() {
 }
 
 #[test]
-fn injection_script_prefixes_helper_url_and_sponsor_images() {
+fn injection_script_prefixes_helper_url() {
     let script = assets::injection_script(57321);
 
     assert!(script.contains("window.__CODEX_SESSION_DELETE_HELPER__"));
     assert!(script.contains("http://127.0.0.1:57321"));
-    assert!(script.contains("window.__CODEX_PLUS_SPONSOR_IMAGES__"));
     assert!(script.contains("window.__CODEX_PLUS_VERSION__"));
     assert!(script.contains(codex_pro_max_core::version::VERSION));
-    assert!(script.contains("https://discord.gg/y96kX7A76v"));
-    assert!(script.contains("data-codex-plus-discord"));
+    assert!(script.contains("https://github.com/devzxl/Codex-Pro-Max"));
+    assert!(!script.contains("data-codex-plus-discord"));
+    assert!(!script.contains("data-codex-plus-issue"));
 }
 
 #[test]
@@ -61,10 +61,9 @@ fn injection_script_marks_diagnostic_build_and_reports_script_loaded() {
 fn injection_script_fetches_ads_without_bridge() {
     let script = assets::injection_script(57321);
 
-    assert!(script.contains("directFetchCodexPlusAds"));
-    assert!(script.contains("cacheBustCodexPlusAdUrl"));
-    assert!(script.contains("Date.now()"));
-    assert!(script.contains("shgkz/Ad-List"));
+    assert!(!script.contains("directFetchCodexPlusAds"));
+    assert!(!script.contains("cacheBustCodexPlusAdUrl"));
+    assert!(!script.contains("shgkz/Ad-List"));
     assert!(
         !script.contains("codexPlusAds = normalizeCodexPlusAds(await postJson(\"/ads\", {}));")
     );
@@ -338,9 +337,11 @@ fn manager_ui_exposes_pure_api_relay_mode_button() {
         .parent()
         .and_then(std::path::Path::parent)
         .expect("core crate should live under crates/codex-pro-max-core");
-    let source = std::fs::read_to_string(repo.join("apps/codex-pro-max-manager/src/App.tsx")).unwrap();
+    let source =
+        std::fs::read_to_string(repo.join("apps/codex-pro-max-manager/src/App.tsx")).unwrap();
     let commands =
-        std::fs::read_to_string(repo.join("apps/codex-pro-max-manager/src-tauri/src/lib.rs")).unwrap();
+        std::fs::read_to_string(repo.join("apps/codex-pro-max-manager/src-tauri/src/lib.rs"))
+            .unwrap();
 
     assert!(source.contains("官方混入 API Key"));
     assert!(source.contains("纯 API"));

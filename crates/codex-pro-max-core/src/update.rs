@@ -3,9 +3,9 @@ use std::path::{Path, PathBuf};
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
 
-pub const DEFAULT_REPOSITORY: &str = "shgkz/codex-pro-max";
+pub const DEFAULT_REPOSITORY: &str = "devzxl/Codex-Pro-Max";
 pub const DEFAULT_LATEST_JSON_URL: &str =
-    "https://github.com/shgkz/codex-pro-max/releases/latest/download/latest.json";
+    "https://github.com/devzxl/Codex-Pro-Max/releases/latest/download/latest.json";
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct ReleaseAsset {

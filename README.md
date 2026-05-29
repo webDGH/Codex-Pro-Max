@@ -9,9 +9,9 @@
 </p>
 
 <p align="center">
-  <img alt="Release" src="https://img.shields.io/github/v/release/webDGH/Codex-Pro-Max">
-  <img alt="Stars" src="https://img.shields.io/github/stars/webDGH/Codex-Pro-Max">
-  <img alt="License" src="https://img.shields.io/github/license/webDGH/Codex-Pro-Max">
+  <img alt="Release" src="https://img.shields.io/github/v/release/devzxl/Codex-Pro-Max">
+  <img alt="Stars" src="https://img.shields.io/github/stars/devzxl/Codex-Pro-Max">
+  <img alt="License" src="https://img.shields.io/github/license/devzxl/Codex-Pro-Max">
   <img alt="Rust" src="https://img.shields.io/badge/rust-1.85%2B-orange">
   <img alt="Tauri" src="https://img.shields.io/badge/tauri-2.x-24C8DB">
 </p>
@@ -20,7 +20,7 @@ codex-pro-max 是面向 Codex App 的外部增强启动器和管理工具。它�
 
 ## 快速使用
 
-从 [GitHub Releases](https://github.com/webDGH/Codex-Pro-Max/releases) 下载最新版安装包：
+从 [GitHub Releases](https://github.com/devzxl/Codex-Pro-Max/releases) 下载最新版安装包：
 
 - Windows：`CodexProMax-*-windows-x64-setup.exe`
 - macOS Intel：`CodexProMax-*-macos-x64.dmg`

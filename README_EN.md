@@ -9,9 +9,9 @@
 </p>
 
 <p align="center">
-  <img alt="Release" src="https://img.shields.io/github/v/release/webDGH/Codex-Pro-Max">
-  <img alt="Stars" src="https://img.shields.io/github/stars/webDGH/Codex-Pro-Max">
-  <img alt="License" src="https://img.shields.io/github/license/webDGH/Codex-Pro-Max">
+  <img alt="Release" src="https://img.shields.io/github/v/release/devzxl/Codex-Pro-Max">
+  <img alt="Stars" src="https://img.shields.io/github/stars/devzxl/Codex-Pro-Max">
+  <img alt="License" src="https://img.shields.io/github/license/devzxl/Codex-Pro-Max">
   <img alt="Rust" src="https://img.shields.io/badge/rust-1.85%2B-orange">
   <img alt="Tauri" src="https://img.shields.io/badge/tauri-2.x-24C8DB">
 </p>
@@ -20,7 +20,7 @@ codex-pro-max is an external enhancement launcher and manager for the Codex App.
 
 ## Quick Start
 
-Download the latest installer from [GitHub Releases](https://github.com/webDGH/Codex-Pro-Max/releases):
+Download the latest installer from [GitHub Releases](https://github.com/devzxl/Codex-Pro-Max/releases):
 
 - Windows: `CodexProMax-*-windows-x64-setup.exe`
 - macOS Intel: `CodexProMax-*-macos-x64.dmg`
@@ -78,7 +78,7 @@ To return to the official login mode, use the clear API mode button in the Relay
 
 Enhancements are controlled in the manager. Enhancement injection is enabled by default. When disabled, codex-pro-max will not inject its menu or scripts.
 
-When relay injection mode is active, plugin entry unlock and forced plugin install are unnecessary, and the UI will say so. Other enhancements, including session delete, export, move, Timeline, recommendations, and user scripts, can still be used.
+When relay injection mode is active, plugin entry unlock and forced plugin install are unnecessary, and the UI will say so. Other enhancements, including session delete, export, move, Timeline, and user scripts, can still be used.
 
 ## Updates and Packages
 

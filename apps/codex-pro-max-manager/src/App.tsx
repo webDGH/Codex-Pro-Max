@@ -283,21 +283,6 @@ type UpdateResult = CommandResult<{
   progress?: number;
 }>;
 
-type AdItem = {
-  id?: string;
-  type: "sponsor" | "normal" | string;
-  title: string;
-  description: string;
-  url: string;
-  highlights?: string[];
-  expires_at?: string;
-};
-
-type AdsResult = CommandResult<{
-  version: number;
-  ads: AdItem[];
-}>;
-
 type ScriptMarketItem = {
   id: string;
   name: string;
@@ -353,7 +338,7 @@ type StartupResult = CommandResult<{
   showUpdate: boolean;
 }>;
 
-type Route = "overview" | "relay" | "context" | "enhance" | "userScripts" | "providerSync" | "recommendations" | "maintenance" | "about" | "settings";
+type Route = "overview" | "relay" | "context" | "enhance" | "userScripts" | "providerSync" | "maintenance" | "about" | "settings";
 type Theme = "dark" | "light";
 
 const routes: Array<{ id: Route; label: string; icon: LucideIcon }> = [
@@ -363,7 +348,6 @@ const routes: Array<{ id: Route; label: string; icon: LucideIcon }> = [
   { id: "enhance", label: "页面增强", icon: Hammer },
   { id: "userScripts", label: "脚本市场", icon: FileCode2 },
   { id: "providerSync", label: "历史会话修复", icon: Link2 },
-  { id: "recommendations", label: "推荐内容", icon: ExternalLink },
   { id: "maintenance", label: "安装维护", icon: Wrench },
   { id: "about", label: "关于", icon: Info },
   { id: "settings", label: "设置", icon: Settings },
@@ -426,7 +410,6 @@ export function App() {
   const [diagnostics, setDiagnostics] = useState<DiagnosticsResult | null>(null);
   const [watcher, setWatcher] = useState<WatcherResult | null>(null);
   const [update, setUpdate] = useState<UpdateResult | null>(null);
-  const [ads, setAds] = useState<AdsResult | null>(null);
   const [scriptMarket, setScriptMarket] = useState<ScriptMarketResult | null>(null);
   const [launchForm, setLaunchForm] = useState({
     appPath: "",
@@ -592,7 +575,6 @@ export function App() {
       await refreshScriptMarket(true);
     }
     if (next === "providerSync") await refreshSettings(true);
-    if (next === "recommendations") await refreshAds(true);
     if (next === "about") {
       await refreshOverview(true);
       await refreshLogs(true);
@@ -752,15 +734,7 @@ export function App() {
       setSettingsForm(normalizeSettings(result.settings));
       showNotice("设置重置", result.message, result.status);
     }
-  };
-
-  const refreshAds = async (silent = false) => {
-    const result = await run(() => call<AdsResult>("load_ads"));
-    if (result) {
-      setAds(result);
-      if (!silent) showResultNotice("推荐内容", result, { silentSuccess: true });
-    }
-  };
+  };
 
   const syncProvidersNow = async () => {
     const result = await run(() => call<CommandResult<Record<string, never>>>("sync_providers_now"));
@@ -1200,7 +1174,6 @@ export function App() {
       refreshLiveContextEntries,
       syncLiveContextEntries,
       importCcsProviders,
-      refreshAds,
       refreshScriptMarket,
       installMarketScript,
       setUserScriptEnabled,
@@ -1341,7 +1314,6 @@ export function App() {
           {route === "providerSync" ? (
             <ProviderSyncScreen settings={settings} form={settingsForm} onFormChange={setSettingsForm} actions={actions} />
           ) : null}
-          {route === "recommendations" ? <RecommendationsScreen ads={ads} actions={actions} /> : null}
           {route === "maintenance" ? (
             <MaintenanceScreen
               overview={overview}
@@ -1394,8 +1366,7 @@ type Actions = {
   refreshRelayFiles: () => Promise<RelayFilesResult | null>;
   refreshLiveContextEntries: () => Promise<LiveContextEntriesResult | null>;
   syncLiveContextEntries: (settings: BackendSettings, silent?: boolean) => Promise<LiveContextEntriesResult | null>;
-  importCcsProviders: () => Promise<void>;
-  refreshAds: () => Promise<void>;
+  importCcsProviders: () => Promise<void>;
   refreshScriptMarket: () => Promise<void>;
   installMarketScript: (id: string) => Promise<void>;
   setUserScriptEnabled: (key: string, enabled: boolean) => Promise<void>;
@@ -1794,43 +1765,6 @@ function ProviderSyncScreen({
   );
 }
 
-function RecommendationsScreen({ ads, actions }: { ads: AdsResult | null; actions: Actions }) {
-  const items = (ads?.ads ?? []).filter((ad) => !isExpiredAd(ad));
-  const sponsors = items.filter((ad) => ad.type === "sponsor");
-  const normal = items.filter((ad) => ad.type === "normal");
-  return (
-    <>
-      <Panel>
-        <CardHead title="推荐内容" detail="与 Codex 内插件菜单使用同一个远端广告源" />
-        <CardContent>
-          <div className="recommend-hero">
-            <div>
-              <strong>{ads ? `已加载 ${items.length} 条推荐` : "尚未加载推荐内容"}</strong>
-              <span>内容来自 shgkz/Ad-List，分为赞助商推荐和普通推荐。</span>
-            </div>
-            <Button onClick={() => void actions.refreshAds()}>
-              <RefreshCw className="h-4 w-4" />
-              刷新推荐
-            </Button>
-          </div>
-        </CardContent>
-      </Panel>
-      <Panel>
-        <CardHead title="赞助商推荐" detail={`${sponsors.length} 条`} />
-        <CardContent>
-          <AdGrid actions={actions} ads={sponsors} empty="暂无赞助商推荐。" />
-        </CardContent>
-      </Panel>
-      <Panel>
-        <CardHead title="普通推荐" detail={`${normal.length} 条`} />
-        <CardContent>
-          <AdGrid actions={actions} ads={normal} empty="暂无普通推荐。" />
-        </CardContent>
-      </Panel>
-    </>
-  );
-}
-
 function MaintenanceScreen({
   overview,
   watcher,
@@ -1972,20 +1906,12 @@ function AboutScreen({
           <div className="metric-list">
             <Metric label="codex-pro-max 版本" value={overview?.current_version ?? update?.currentVersion ?? "-"} />
             <Metric label="Codex 版本" value={overview?.codex_version ?? "未检测到"} />
-            <Metric label="项目地址" value="github.com/shgkz/codex-pro-max" />
+            <Metric label="项目地址" value="github.com/devzxl/Codex-Pro-Max" />
           </div>
           <Toolbar>
-            <Button onClick={() => void actions.openExternalUrl("https://github.com/shgkz/codex-pro-max")} variant="secondary">
+            <Button onClick={() => void actions.openExternalUrl("https://github.com/devzxl/Codex-Pro-Max")} variant="secondary">
               <ExternalLink className="h-4 w-4" />
               打开项目主页
-            </Button>
-            <Button onClick={() => void actions.openExternalUrl("https://github.com/shgkz/codex-pro-max/issues")} variant="secondary">
-              <ExternalLink className="h-4 w-4" />
-              反馈问题
-            </Button>
-            <Button onClick={() => void actions.openExternalUrl("https://discord.gg/y96kX7A76v")} variant="secondary">
-              <MessageCircle className="h-4 w-4" />
-              Discord
             </Button>
           </Toolbar>
         </CardContent>
@@ -3188,39 +3114,6 @@ function ScriptRow({ script, actions }: { script: NonNullable<UserScriptInventor
   );
 }
 
-function AdGrid({ ads, empty, actions }: { ads: AdItem[]; empty: string; actions: Actions }) {
-  if (!ads.length) return <div className="empty">{empty}</div>;
-  return (
-    <div className="ad-grid">
-      {ads.map((ad) => (
-        <button className="ad-card" key={ad.id || `${ad.type}-${ad.title}`} onClick={() => void actions.openExternalUrl(ad.url)} type="button">
-          <div>
-            <strong>{ad.title}</strong>
-            <p>{ad.description}</p>
-          </div>
-          {ad.highlights?.length ? (
-            <div className="ad-tags">
-              {ad.highlights.map((item) => (
-                <span key={item}>{item}</span>
-              ))}
-            </div>
-          ) : null}
-          <span className="ad-link">
-            打开
-            <ExternalLink className="h-4 w-4" />
-          </span>
-        </button>
-      ))}
-    </div>
-  );
-}
-
-function isExpiredAd(ad: AdItem) {
-  if (!ad.expires_at) return false;
-  const expiresAt = Date.parse(ad.expires_at);
-  return Number.isFinite(expiresAt) && expiresAt < Date.now();
-}
-
 function routeTitle(route: Route) {
   return routes.find((item) => item.id === route)?.label ?? "概览";
 }
@@ -3233,7 +3126,6 @@ function routeSubtitle(route: Route) {
     enhance: "会话删除、导出、项目移动和脚本能力",
     userScripts: "内置和用户自定义脚本清单",
     providerSync: "切换模式后让旧对话重新可见",
-    recommendations: "赞助商推荐与普通推荐",
     maintenance: "入口安装、修复、Watcher 与手动启动",
     about: "版本信息、项目链接、GitHub Release 更新、日志与诊断",
     settings: "主题、命令包装器和启动参数",

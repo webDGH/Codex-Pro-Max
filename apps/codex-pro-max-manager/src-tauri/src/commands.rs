@@ -205,12 +205,6 @@ pub struct WatcherPayload {
 }
 
 #[derive(Debug, Clone, Serialize)]
-pub struct AdsPayload {
-    pub version: u64,
-    pub ads: Vec<Value>,
-}
-
-#[derive(Debug, Clone, Serialize)]
 pub struct ScriptMarketPayload {
     pub market: Value,
     pub user_scripts: Value,
@@ -314,7 +308,10 @@ pub fn restart_codex_pro_max(request: LaunchRequest) -> CommandResult<Value> {
     spawn_codex_pro_max_launch(request, "Codex 已请求重启，启动任务正在后台运行。")
 }
 
-fn spawn_codex_pro_max_launch(request: LaunchRequest, accepted_message: &str) -> CommandResult<Value> {
+fn spawn_codex_pro_max_launch(
+    request: LaunchRequest,
+    accepted_message: &str,
+) -> CommandResult<Value> {
     let debug_port = request.debug_port;
     let helper_port = request.helper_port;
     let _ = codex_pro_max_core::diagnostic_log::append_diagnostic_log(
@@ -559,10 +556,11 @@ fn remove_linked_ccs_profiles_for_local_storage(settings: &mut BackendSettings) 
     settings
         .relay_profiles
         .retain(|profile| profile.linked_ccs_provider_id.trim().is_empty());
-    if !settings.ccs_link_enabled && !settings
-        .relay_profiles
-        .iter()
-        .any(|profile| profile.id == settings.active_relay_id)
+    if !settings.ccs_link_enabled
+        && !settings
+            .relay_profiles
+            .iter()
+            .any(|profile| profile.id == settings.active_relay_id)
     {
         settings.active_relay_id = settings
             .relay_profiles
@@ -705,9 +703,10 @@ fn ensure_text_newline(value: &str) -> String {
 
 #[tauri::command]
 pub async fn sync_providers_now() -> CommandResult<Value> {
-    let result = tauri::async_runtime::spawn_blocking(|| codex_pro_max_data::run_provider_sync(None))
-        .await
-        .map_err(|error| anyhow::anyhow!("provider sync task failed: {error}"));
+    let result =
+        tauri::async_runtime::spawn_blocking(|| codex_pro_max_data::run_provider_sync(None))
+            .await
+            .map_err(|error| anyhow::anyhow!("provider sync task failed: {error}"));
     match result {
         Ok(sync) => ok(
             &format!(
@@ -724,20 +723,6 @@ pub async fn sync_providers_now() -> CommandResult<Value> {
             }),
         ),
         Err(error) => failed(&format!("供应商同步失败：{error}"), json!({})),
-    }
-}
-
-#[tauri::command]
-pub async fn load_ads() -> CommandResult<AdsPayload> {
-    match codex_pro_max_core::ads::fetch_ad_list().await {
-        Ok(payload) => ok("推荐内容已加载。", ads_payload(payload)),
-        Err(error) => failed(
-            &format!("推荐内容加载失败：{error}"),
-            AdsPayload {
-                version: 1,
-                ads: Vec::new(),
-            },
-        ),
     }
 }
 
@@ -971,8 +956,9 @@ pub fn load_watcher_state() -> CommandResult<WatcherPayload> {
 
 #[tauri::command]
 pub fn install_watcher() -> CommandResult<WatcherPayload> {
-    let launcher_path =
-        codex_pro_max_core::install::companion_binary_path(codex_pro_max_core::install::SILENT_BINARY);
+    let launcher_path = codex_pro_max_core::install::companion_binary_path(
+        codex_pro_max_core::install::SILENT_BINARY,
+    );
     match codex_pro_max_core::watcher::install_watcher(&launcher_path, default_debug_port()) {
         Ok(()) => ok("watcher 已安装。", watcher_payload()),
         Err(error) => failed(&format!("安装 watcher 失败：{error}"), watcher_payload()),
@@ -1289,7 +1275,8 @@ pub fn sync_live_context_entries(
             },
         );
     }
-    match codex_pro_max_core::relay_config::list_context_entries_from_common_config(&updated_config) {
+    match codex_pro_max_core::relay_config::list_context_entries_from_common_config(&updated_config)
+    {
         Ok(entries) => ok(
             "live 工具与插件已同步。",
             LiveContextEntriesPayload { entries },
@@ -1329,18 +1316,20 @@ pub fn delete_context_entry(request: ContextDeleteRequest) -> CommandResult<Cont
 pub fn extract_relay_common_config(
     request: ExtractRelayCommonConfigRequest,
 ) -> CommandResult<ExtractRelayCommonConfigPayload> {
-    match codex_pro_max_core::relay_config::extract_common_config_from_config(&request.config_contents)
-        .and_then(|common_config_contents| {
-            let profile_config_contents =
-                codex_pro_max_core::relay_config::strip_common_config_from_config(
-                    &request.config_contents,
-                    &common_config_contents,
-                )?;
-            Ok(ExtractRelayCommonConfigPayload {
-                common_config_contents,
-                profile_config_contents,
-            })
-        }) {
+    match codex_pro_max_core::relay_config::extract_common_config_from_config(
+        &request.config_contents,
+    )
+    .and_then(|common_config_contents| {
+        let profile_config_contents =
+            codex_pro_max_core::relay_config::strip_common_config_from_config(
+                &request.config_contents,
+                &common_config_contents,
+            )?;
+        Ok(ExtractRelayCommonConfigPayload {
+            common_config_contents,
+            profile_config_contents,
+        })
+    }) {
         Ok(payload) => ok("通用配置已按兼容切换规则提取。", payload),
         Err(error) => failed(
             &format!("提取通用配置失败：{error}"),
@@ -1651,7 +1640,7 @@ pub fn apply_pure_api_injection() -> CommandResult<RelayPayload> {
                 );
             }
             ok(
-                    "纯 API 模式已写入：config.toml 已写入 custom provider，auth.json 已切换为当前供应商。",
+                "纯 API 模式已写入：config.toml 已写入 custom provider，auth.json 已切换为当前供应商。",
                 relay_payload(status, result.backup_path),
             )
         }
@@ -1683,8 +1672,10 @@ pub fn clear_relay_injection() -> CommandResult<RelayPayload> {
         && !relay.official_mix_api_key
         && !relay.auth_contents.trim().is_empty())
     .then_some(relay.auth_contents.as_str());
-    match codex_pro_max_core::relay_config::clear_relay_config_to_home_with_auth(&home, auth_contents)
-    {
+    match codex_pro_max_core::relay_config::clear_relay_config_to_home_with_auth(
+        &home,
+        auth_contents,
+    ) {
         Ok(result) => {
             let status = codex_pro_max_core::relay_config::relay_status_from_home(&home);
             log_manager_event(
@@ -1861,17 +1852,6 @@ fn read_optional_text_file(path: &std::path::Path) -> anyhow::Result<String> {
     }
 }
 
-fn ads_payload(payload: Value) -> AdsPayload {
-    AdsPayload {
-        version: payload.get("version").and_then(Value::as_u64).unwrap_or(1),
-        ads: payload
-            .get("ads")
-            .and_then(Value::as_array)
-            .cloned()
-            .unwrap_or_default(),
-    }
-}
-
 fn open_url(url: &str) -> anyhow::Result<()> {
     #[cfg(windows)]
     {
@@ -1918,7 +1898,9 @@ fn settings_payload_value() -> Result<SettingsPayload, (anyhow::Error, SettingsP
 
 fn fallback_settings_payload() -> SettingsPayload {
     SettingsPayload {
-        settings: settings_with_live_ccs_profiles(SettingsStore::default().load().unwrap_or_default()),
+        settings: settings_with_live_ccs_profiles(
+            SettingsStore::default().load().unwrap_or_default(),
+        ),
         settings_path: codex_pro_max_core::paths::default_settings_path()
             .to_string_lossy()
             .to_string(),
@@ -2586,18 +2568,6 @@ model_reasoning_effort = "high"
                 .relay_context_config_contents
                 .contains("[mcp_servers.context7]")
         );
-    }
-
-    #[test]
-    fn ads_payload_keeps_version_and_ad_items() {
-        let payload = ads_payload(json!({
-            "version": 1,
-            "ads": [{"id": "ad-1", "type": "normal", "title": "Ad"}]
-        }));
-
-        assert_eq!(payload.version, 1);
-        assert_eq!(payload.ads.len(), 1);
-        assert_eq!(payload.ads[0]["id"], json!("ad-1"));
     }
 
     #[test]
